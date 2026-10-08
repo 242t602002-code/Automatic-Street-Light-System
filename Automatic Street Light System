@@ -1,0 +1,39 @@
+import RPi.GPIO as GPIO
+import time
+
+# GPIO pins
+LDR_PIN = 18
+LED_PIN = 23
+
+GPIO.setmode(GPIO.BCM)
+
+# Setup
+GPIO.setup(LDR_PIN, GPIO.IN)
+GPIO.setup(LED_PIN, GPIO.OUT)
+
+print("Automatic Street Light System Started")
+
+try:
+    while True:
+
+        # Read LDR
+        light_status = GPIO.input(LDR_PIN)
+
+        if light_status == 0:
+            # Dark -> Street light ON
+            GPIO.output(LED_PIN, GPIO.HIGH)
+            print("Darkness detected - Light ON")
+
+        else:
+            # Bright -> Street light OFF
+            GPIO.output(LED_PIN, GPIO.LOW)
+            print("Daylight detected - Light OFF")
+
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    print("Program stopped")
+
+finally:
+    GPIO.output(LED_PIN, GPIO.LOW)
+    GPIO.cleanup()
